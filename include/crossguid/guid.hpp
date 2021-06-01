@@ -114,15 +114,16 @@ namespace details
 	};
 
 
-	template <typename T, typename... Rest>
-	struct hash<T, Rest...>
-	{
-		inline std::size_t operator()(const T& v, const Rest&... rest) {
-			std::size_t seed = hash<Rest...>{}(rest...);
-			seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
-			return seed;
-		}
-	};
+	//CJS: I like my hash better (it's faster)
+	//template <typename T, typename... Rest>
+	//struct hash<T, Rest...>
+	//{
+	//	inline std::size_t operator()(const T& v, const Rest&... rest) {
+	//		std::size_t seed = hash<Rest...>{}(rest...);
+	//		seed ^= hash<T>{}(v) + 0x9e3779b9 + (seed << 6) + (seed >> 2);
+	//		return seed;
+	//	}
+	//};
 }
 
 END_XG_NAMESPACE
@@ -137,13 +138,13 @@ namespace std
 	// Specialization for std::hash<Guid> -- this implementation
 	// uses std::hash<std::string> on the stringification of the guid
 	// to calculate the hash
-	template <>
-	struct hash<xg::Guid>
-	{
-		std::size_t operator()(xg::Guid const &guid) const
-		{
-			const uint64_t* p = reinterpret_cast<const uint64_t*>(guid.bytes().data());
-			return xg::details::hash<uint64_t, uint64_t>{}(p[0], p[1]);
-		}
-	};
+	//template <>
+	//struct hash<xg::Guid>
+	//{
+	//	std::size_t operator()(xg::Guid const &guid) const
+	//	{
+	//		const uint64_t* p = reinterpret_cast<const uint64_t*>(guid.bytes().data());
+	//return xg::details::hash<uint64_t, uint64_t>{}(p[0], p[1]);
+	//	}
+	//};
 }
